@@ -1,0 +1,84 @@
+---
+title: "Camparison of 401K VS Social Security for Retirement"
+author: "Partha Banerjee, Rohan Fray, Vincent Ying"
+date: "November 19, 2014"
+output: html_document
+---
+
+
+  
+# Library and Directory Config
+```{r echo=FALSE}
+# Add all required packages here. 
+required.packages <- c("plyr", 
+                       "ggplot2")
+
+# Check to see if packages in required.packages are installed
+have.pkgs <- required.packages %in% installed.packages()
+
+if(length(required.packages) > sum(have.pkgs)){
+  install.packages(required.packages[!have.pkgs])
+}
+
+for(pkg in required.packages){
+  library(pkg, character.only = TRUE)
+}
+
+# Make sure we're in the right working directory:  "Code"
+if("Code" %in% list.files()){
+  setwd("Code")
+}
+
+if(!("Code" %in% list.files("..")))
+{
+  stop
+}
+
+```
+
+# Load Data
+
+```{r data}
+# Start by loading the data
+
+```
+
+# Clean Data
+
+```{r}
+
+```
+
+# Add Columns
+
+```{r}
+
+```
+
+
+# Explore Data
+
+```{r}
+
+```
+
+# Analysis
+
+```{r}
+
+
+```
+
+## Graphs
+
+```{r , fig.height=75}
+
+```
+
+# Comments
+
+* 
+
+# TODO
+
+* Start basic work for each section of this project.
