@@ -11,7 +11,8 @@ output: html_document
 ```{r echo=FALSE}
 # Add all required packages here. 
 required.packages <- c("plyr", 
-                       "ggplot2")
+                       "ggplot2",
+                       "gdata")
 
 # Check to see if packages in required.packages are installed
 have.pkgs <- required.packages %in% installed.packages()
@@ -39,14 +40,70 @@ if(!("Code" %in% list.files("..")))
 # Load Data
 
 ```{r data}
-# Start by loading the data
 
+# SSA Dataset
+supp13 = read.xls("../Data/supplement13.xlsx")
+
+# 401k Dataset
+form5500 = read.csv("../Data/f_5500_2013_latest-min.csv")
+form5500R = read.csv("../Data/F_SCH_R_PART1_2013_latest.csv")
 ```
 
 # Clean Data
 
 ```{r}
+if (FALSE) {
+form5500 = read.csv("../Data/f_5500_2013_latest.csv")
 
+# Features to Keep from 5500
+keeps <- c(
+"ACK_ID", 
+"FORM_PLAN_YEAR_BEGIN_DATE", 
+"FORM_TAX_PRD", 
+"TYPE_PLAN_ENTITY_CD", 
+"FINAL_FILING_IND", 
+"PLAN_NAME",
+"SPONS_DFE_PN",
+"PLAN_EFF_DATE",
+"SPONS_DFE_EIN",
+"ADMIN_EIN",
+"TOT_PARTCP_BOY_CNT",
+"TOT_ACTIVE_PARTCP_CNT",
+"RTD_SEP_PARTCP_RCVG_CNT",
+"RTD_SEP_PARTCP_FUT_CNT",
+"SUBTL_ACT_RTD_SEP_CNT",
+"BENEF_RCVG_BNFT_CNT",
+"TOT_ACT_RTD_SEP_BENEF_CNT",
+"PARTCP_ACCOUNT_BAL_CNT",
+"SEP_PARTCP_PARTL_VSTD_CNT",
+"CONTRIB_EMPLRS_CNT",
+"TYPE_PENSION_BNFT_CODE",
+"TYPE_WELFARE_BNFT_CODE",
+"FUNDING_INSURANCE_IND",
+"FUNDING_SEC412_IND",
+"FUNDING_TRUST_IND",
+"FUNDING_GEN_ASSET_IND",
+"BENEFIT_INSURANCE_IND",
+"BENEFIT_SEC412_IND",
+"BENEFIT_TRUST_IND",
+"BENEFIT_GEN_ASSET_IND",
+"SCH_R_ATTACHED_IND",
+"SCH_MB_ATTACHED_IND",
+"SCH_SB_ATTACHED_IND",
+"SCH_H_ATTACHED_IND",
+"SCH_I_ATTACHED_IND",
+"SCH_A_ATTACHED_IND",
+"NUM_SCH_A_ATTACHED_CNT",
+"SCH_C_ATTACHED_IND",
+"SCH_D_ATTACHED_IND",
+"SCH_G_ATTACHED_IND",
+"FILING_STATUS",
+"DATE_RECEIVED"
+)
+form5500_min <- form5500[,(names(form5500) %in% keeps)]
+
+write.csv(x=form5500_min, file="../Data/f_5500_2013_latest-min.csv")
+}
 ```
 
 # Add Columns
