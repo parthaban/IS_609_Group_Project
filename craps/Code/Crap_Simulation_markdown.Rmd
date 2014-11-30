@@ -1,4 +1,11 @@
+---
+title: "Craps_Simulation"
+output: html_document
+---
 
+First we will look at the pass bets and the probability of winning
+
+```{r}
 #pass bet
 N = 10000
 
@@ -47,10 +54,12 @@ for (i in 1:N){
 
 #Probability of winning when you are a pass bet
 mean(data)
+```
 
 
 
-
+Next we will look at the probability of a no-pass bet win
+```{r}
 #no-pass bet
 N = 10000
 
@@ -99,3 +108,4 @@ for (i in 1:N){
 
 #Probability of winning when you are a no-pass bet
 mean(data)
+```
