@@ -41,8 +41,13 @@ if(!("Code" %in% list.files("..")))
 
 ```{r data}
 
-# SSA Dataset
-supp13 = read.xls("../Data/supplement13.xlsx")
+# SSA Dataset (Taken from supplement13.xlsx)
+ssa_taxrate = read.csv("../Data/OASDI - Table 2.A3 - Annual max taxable earnings and contribution rates.csv")
+ssa_taxamt = read.csv("../Data/OASDI - Table 2.A4 - Maximum annual contribution.csv")
+
+ssa_allbenefit = read.csv("../Data/OASDI - Table 6.B3 - All Benefit.csv")
+ssa_menbenefit = read.csv("../Data/OASDI - Table 6.B3 - Mens Benefit.csv")
+ssa_womenbenefit = read.csv("../Data/OASDI - Table 6.B3 - Womens Benefit.csv")
 
 # 401k Dataset
 form5500 = read.csv("../Data/f_5500_2013_latest-min.csv")
