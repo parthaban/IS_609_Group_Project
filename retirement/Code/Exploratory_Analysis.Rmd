@@ -110,9 +110,6 @@ f5500_401k <- form5500[grep("401", form5500$PLAN_NAME),]
 
 # Merge 5500 401K and 5500R data
 f5500_merge <- merge(f5500_401k, form5500R, by=c("ACK_ID"))
-
-# Convert ssa_amt from factor to int
-as.numeric(ssa_taxamt$Employee..OASI.)
 ```
 
 
@@ -131,6 +128,11 @@ summary(f5500_merge)
 
 ```{r , fig.height=75}
 plot(ssa_taxamt$Year, ssa_taxamt$Employee..OASI.)
+
+bp <- ggplot(ssa_benefit, aes(x=Monthly.Benefit..dollars., y=Total.Number)) + geom_point()
+bp <- bp + theme(axis.text.x=element_text(angle=90,hjust=1,vjust=0.5))
+bp
+
 ```
 
 # Analysis
