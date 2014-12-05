@@ -34,20 +34,15 @@ if(!("Code" %in% list.files("..")))
 {
   stop
 }
-
 ```
 
 # Load Data
 
 ```{r data}
-
 # SSA Dataset (Taken from supplement13.xlsx)
 ssa_taxrate = read.csv("../Data/OASDI - Table 2.A3 - Annual max taxable earnings and contribution rates.csv")
 ssa_taxamt = read.csv("../Data/OASDI - Table 2.A4 - Maximum annual contribution.csv")
-
-ssa_allbenefit = read.csv("../Data/OASDI - Table 6.B3 - All Benefit.csv")
-ssa_menbenefit = read.csv("../Data/OASDI - Table 6.B3 - Mens Benefit.csv")
-ssa_womenbenefit = read.csv("../Data/OASDI - Table 6.B3 - Womens Benefit.csv")
+ssa_benefit = read.csv("../Data/OASDI - Table 6.B3 - All Benefit.csv")
 
 # 401k Dataset
 form5500 = read.csv("../Data/f_5500_2013_latest-min.csv")
@@ -109,19 +104,33 @@ form5500_min <- form5500[,(names(form5500) %in% keeps)]
 
 write.csv(x=form5500_min, file="../Data/f_5500_2013_latest-min.csv")
 }
-```
 
-# Add Columns
+# Filter for 401K plans only
+f5500_401k <- form5500[grep("401", form5500$PLAN_NAME),]
 
-```{r}
+# Merge 5500 401K and 5500R data
+f5500_merge <- merge(f5500_401k, form5500R, by=c("ACK_ID"))
 
+# Convert ssa_amt from factor to int
+as.numeric(ssa_taxamt$Employee..OASI.)
 ```
 
 
 # Explore Data
 
 ```{r}
+summary(ssa_benefit)
+summary(ssa_taxamt)
+summary(ssa_taxrate)
 
+summary(f5500_401k)
+summary(f5500_merge)
+```
+
+## Graphs
+
+```{r , fig.height=75}
+plot(ssa_taxamt$Year, ssa_taxamt$Employee..OASI.)
 ```
 
 # Analysis
