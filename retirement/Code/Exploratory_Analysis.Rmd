@@ -127,12 +127,20 @@ summary(f5500_merge)
 ## Graphs
 
 ```{r , fig.height=75}
+# Maximum SSA contribution per annum 
 plot(ssa_taxamt$Year, ssa_taxamt$Employee..OASI.)
 
+# Monthly SSA benefit
 bp <- ggplot(ssa_benefit, aes(x=Monthly.Benefit..dollars., y=Total.Number)) + geom_point()
 bp <- bp + theme(axis.text.x=element_text(angle=90,hjust=1,vjust=0.5))
 bp
 
+# Merged - Participants and Contribution
+plot(f5500_merge$TOT_ACTIVE_PARTCP_CNT)
+plot(f5500_merge$RTD_SEP_PARTCP_RCVG_CNT)
+
+plot(form5500R$PEN_CONTRIB_EMPLR_AMT)
+plot(f5500_merge$PEN_CONTRIB_EMPLR_AMT)
 ```
 
 # Analysis
