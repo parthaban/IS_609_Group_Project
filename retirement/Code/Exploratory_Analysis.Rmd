@@ -127,6 +127,8 @@ summary(f5500_merge)
 ## Graphs
 
 ```{r , fig.height=75}
+# Taxrate per annum 
+plot(ssa_taxrate$Year, ssa_taxrate$Contribution.Rate..percent...Employer.and.employee..OASI.)
 # Maximum SSA contribution per annum 
 plot(ssa_taxamt$Year, ssa_taxamt$Employee..OASI.)
 
@@ -147,12 +149,6 @@ plot(f5500_merge$PEN_CONTRIB_EMPLR_AMT)
 
 ```{r}
 
-
-```
-
-## Graphs
-
-```{r , fig.height=75}
 
 ```
 
