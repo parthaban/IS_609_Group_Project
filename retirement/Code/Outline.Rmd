@@ -1,0 +1,81 @@
+---
+title: "Camparison of 401K VS Social Security for Retirement"
+author: "Partha Banerjee, Rohan Fray, Vincent Ying"
+date: "November 19, 2014"
+output: html_document
+---
+
+
+  
+# Library and Directory Config
+```{r echo=FALSE}
+# Add all required packages here. 
+required.packages <- c("plyr", 
+                       "ggplot2",
+                       "gdata")
+
+# Check to see if packages in required.packages are installed
+have.pkgs <- required.packages %in% installed.packages()
+
+if(length(required.packages) > sum(have.pkgs)){
+  install.packages(required.packages[!have.pkgs])
+}
+
+for(pkg in required.packages){
+  library(pkg, character.only = TRUE)
+}
+
+# Make sure we're in the right working directory:  "Code"
+if("Code" %in% list.files()){
+  setwd("Code")
+}
+
+if(!("Code" %in% list.files("..")))
+{
+  stop
+}
+```
+
+# Load Data
+
+```{r data}
+# SSA Dataset (Taken from supplement13.xlsx)
+ssa_taxrate = read.csv("../Data/OASDI - Table 2.A3 - Annual max taxable earnings and contribution rates.csv")
+ssa_taxamt = read.csv("../Data/OASDI - Table 2.A4 - Maximum annual contribution.csv")
+ssa_benefit = read.csv("../Data/OASDI - Table 6.B3 - All Benefit.csv")
+
+age <- c(62, 63, 64, 65, 66, 67, 68, 69, 70)
+
+# Average montly benefit from 2012
+#   supplement13, Table 6.B3 
+#   and http://www.ssa.gov/OACT/ProgData/ar_drc.html
+mth_amt <- c(1103.9, 1182.75,	1261.6,	1366.62, 1471.81,	1577, 1703.16, 1829.32, 1955.48)
+ssa_benefit <- data.frame(age, mth_amt)
+
+yr_amt <- c(690500, 708000, 725500, 743000,	760500, 778000, 795500, 813000, 830500)
+k_contrib <- data.frame(age, yr_amt)
+```
+
+
+Assumptions for modeling problem:
+- Start work at age 22.
+- Start contributing to 401k from 22 with an inital contribution of $8,000 and $17,500 every year after.
+
+
+Problem:
+- When to start retirement?
+- When to start withdrawing from SSA?
+
+
+Models:
+A. Modeling with Decision Theory
+```{r}
+
+
+```
+
+B. Optimization of Discrete Models with Simplex Method
+```{r}
+
+
+```

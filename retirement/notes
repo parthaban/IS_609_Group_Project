@@ -1,23 +1,39 @@
+- Average retirement statistics:
+	- Average age of retirement is 62 years.
+	- Average length of retirement is 18 years.
+	- http://www.statisticbrain.com/retirement-statistics/
+
+
 SSA Contribution:
 - Tax rate for contribution given by supplement13, Table 2.A3.
+- Maximum tax amoung given by supplement13, Table 2.A4
+
 
 SSA Benefit:
 - Benefit payouts are adjusted for inflation.
-- Taxation of SSA benefits can occur when withdrawing a large amount from IRA due to RMD at 70.5. "tax torpedo"
+- Taxation of SSA benefits can occur when withdrawing a large amount from IRA due to RMD at 70.5 ("tax torpedo").
 
-- Effect of Early or Delayed Retirement on Retirement Benefits,
+- Effect of Early or Delayed Retirement on Retirement Benefits (yearly),
 	Year of Birth	FRA	Credit	62	63	64	65	66	67	70
 	1960 and later 	67 	8 	70 	75 	80 	86 2⁄3 	93 1⁄3 	100 	124
-	(http://www.ssa.gov/OACT/ProgData/ar_drc.html)
+	- http://www.ssa.gov/OACT/ProgData/ar_drc.html
 
-- Average month benefit in 2012, 
+- Average monthly benefit in 2012, 
 	Total Number	ERA (Early retirement)	FRA (Full Retirement Age)
 	$1,147.78	$1,147.78		$1,577.00
-	(supplement13, Table 6.B3)
+	- supplement13, Table 6.B3
+
+- Extrapolate average monthly benefit from 2012,
+	Age	62	63	64	65	66	67	70
+	Benefit	1103.9	708000	725500	1366.62	1471.81	1577	1955.48
 
 
 401k Contribution:
 - Tax-deferring contributions until retirement.
+- Amount contributed to 401k by retirement without accounting for compound growth, 
+	Age	62	63	64	65	66	67	70
+	401k	690500	708000	725500	743000	760500	778000	795500
+	- https://blog.personalcapital.com/financial-planning-2/average-401k-balance-age/
 
 
 401k Benefit:
@@ -25,5 +41,6 @@ SSA Benefit:
 - RMD (required minimum distribution) starts at either 70.5 or on retirement. 
 	- http://www.irs.gov/Retirement-Plans/Plan-Participant,-Employee/Retirement-Topics-Required-Minimum-Distributions-%28RMDs%29
 - During retirement age, the intended purpose of a 401k was to purchase life annuities.
-	- However, average payous for life annuities have been decreasing.
+	- However, average payouts for life annuities have been decreasing.
 - Savings could be siphoned off by commissions and management fees.
+
