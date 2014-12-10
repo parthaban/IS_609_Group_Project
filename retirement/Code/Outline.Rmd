@@ -99,18 +99,25 @@ A. Modeling with Decision Theory
 # Calculating SSA Total Benefit with Average Death at 85.45
 ssa_benefit$tot_amt <- (85.45-ssa_benefit$age) * 12 * ssa_benefit$mth_amt
 
-# Calculate 401k Weekly Benefit with Average Death at 85.45
-k_Balance$mth_benefit <- k_Balance$tot_low / (85.45-k_Balance$age) / 12
+# Calculate 401k Monthly Benefit with Base Balance
+k_Balance$mth_low <- k_Balance$tot_low / (85.45-k_Balance$age) / 12
+# Calculate 401k Monthly Benefit with 7% Increase
+k_Balance$mth_high <- k_Balance$tot_high / (85.45-k_Balance$age) / 12
 
-# Monthly amount after retirement
-#   Does not account for earlier retirement but delayed SSA
-mth_amt <- ssa_benefit$mth_amt + k_Balance$mth_benefit
-tot_amt <- ssa_benefit$tot_amt + k_Balance$tot_low
+# Combined benefit when withdrawing 401k at 62 and delaying SSA
+tot_amt <- ssa_benefit$tot_amt + k_Balance[k_Balance$age==62,]$tot_high
+mth_amt <- tot_amt / (85.45 * 12)
 combin <- data.frame(age, mth_amt, tot_amt)
 
 # Combined benefits from SSA and 401k
 plot(combin$age, combin$mth_amt)
 plot(combin$age, combin$tot_amt)
+
+
+# Combined benefit when contributing to 401k until start of SSA
+tot_amt <- ssa_benefit$tot_amt + k_Balance$tot_high
+mth_amt <- tot_amt / (85.45 * 12)
+combin_401contrib <- data.frame(age, mth_amt, tot_amt)
 ```
 
 B. Optimization of Discrete Models with Simplex Method
