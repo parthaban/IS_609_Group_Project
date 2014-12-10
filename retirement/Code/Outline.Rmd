@@ -59,16 +59,34 @@ k_Balance <- data.frame(age, tot_low)
 ```
 
 
+# Comparison of SSA and 401k return.
+
 Assumptions for modeling problem:
 - Start work at age 22.
+- Average life expectency till 85.45 for those reaching 65 in 2014.
+- Use average SSA benefit from 2012
 - Start contributing to 401k from age 22 with an inital contribution of $8,000 and $17,500 every year after.
 - Use base amount of 401k contributions.
-- Average life expectency till 85.45 for those reaching 65 in 2014.
 
 
+```{r}
+
+
+```
+
+
+# Modeling:
 Problem:
 - When to start retirement?
 - When to start withdrawing from SSA?
+
+
+Assumptions for modeling problem:
+- Start work at age 22.
+- Average life expectency till 85.45 for those reaching 65 in 2014.
+- Use average SSA benefit from 2012
+- Start contributing to 401k from age 22 with an inital contribution of $8,000 and $17,500 every year after.
+- Use base amount of 401k contributions.
 
 
 Models:
@@ -86,6 +104,7 @@ mth_amt <- ssa_benefit$mth_amt + k_Balance$mth_benefit
 tot_amt <- ssa_benefit$tot_amt + k_Balance$tot_low
 combin <- data.frame(age, mth_amt, tot_amt)
 
+# Combined benefits from SSA and 401k
 plot(combin$age, combin$mth_amt)
 plot(combin$age, combin$tot_amt)
 ```

@@ -9,12 +9,24 @@
 		- Avg women live till 86.6 years.
 
 
-SSA Contribution:
+
+SSA CONTRIBUTION:
 - Tax rate for contribution given by supplement13, Table 2.A3.
 - Maximum tax amoung given by supplement13, Table 2.A4
 
 
-SSA Benefit:
+SSA BENEFIT:
+- Benefit calculation involves three steps:
+	1. Worker's previous earnings are recalulated in current terms with inflation adjustment.
+	2. Earnings for the highest 35 years are averaged and divided by 12 to obtain AIME (Averaged Indexed Monthly Earnings).
+	3. SSA benefit formula applied to AIME to obtain PIA (Primary Insurance Amount).
+
+- PIA formula with FRA at 2015:
+	(a) 90 percent of the first $826 of his/her average indexed monthly earnings, plus 
+	(b) 32 percent of his/her average indexed monthly earnings over $826 and through $4,980, plus 
+	(c) 15 percent of his/her average indexed monthly earnings over $4,980.
+	- http://www.ssa.gov/oact/cola/piaformula.html
+
 - Benefit payouts are adjusted for inflation according to CPI.
 - Spousal benefit can also be claimed.
 - Taxation of SSA benefits can occur when withdrawing a large amount from IRA due to RMD at 70.5 ("tax torpedo").
@@ -34,7 +46,8 @@ SSA Benefit:
 	Benefit	1103.9	708000	725500	1366.62	1471.81	1577	1955.48
 
 
-401k Contribution:
+
+401k CONTRIBUTION:
 - Tax-deferring contributions until retirement.
 - Amount contributed to 401k by retirement without accounting for compound growth, 
 	Age	62	63	64	65	66	67	70
@@ -42,7 +55,7 @@ SSA Benefit:
 	- https://blog.personalcapital.com/financial-planning-2/average-401k-balance-age/
 
 
-401k Benefit:
+401k BENEFIT:
 - Withdrawl without penalties start at 59.5 years.
 - RMD (required minimum distribution) starts at either 70.5 or on retirement. 
 	- http://www.irs.gov/Retirement-Plans/Plan-Participant,-Employee/Retirement-Topics-Required-Minimum-Distributions-%28RMDs%29
