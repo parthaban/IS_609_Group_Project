@@ -61,12 +61,12 @@ k_Balance <- data.frame(age, tot_low)
 
 # Comparison of SSA and 401k return.
 
-Assumptions for modeling problem:
+Assumptions for comparison:
 - Start work at age 22.
-- Average life expectency till 85.45 for those reaching 65 in 2014.
+- Life Expectency for birth in 1991 is 75.8 years.
 - Use average SSA benefit from 2012
-- Start contributing to 401k from age 22 with an inital contribution of $8,000 and $17,500 every year after.
-- Use base amount of 401k contributions.
+- Start contributing to 401k from age 22 with contributions the same amount as SSA contribution.
+- Use 7% compound growth for 401k contributions.
 
 
 ```{r}
@@ -84,7 +84,7 @@ Problem:
 Assumptions for modeling problem:
 - Start work at age 22.
 - Average life expectency till 85.45 for those reaching 65 in 2014.
-- Use average SSA benefit from 2012
+- Using average SSA benefit from 2012
 - Start contributing to 401k from age 22 with an inital contribution of $8,000 and $17,500 every year after.
 - Use base amount of 401k contributions.
 
