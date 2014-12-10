@@ -44,6 +44,7 @@ ssa_taxrate = read.csv("../Data/OASDI - Table 2.A3 - Annual max taxable earnings
 ssa_taxamt = read.csv("../Data/OASDI - Table 2.A4 - Maximum annual contribution.csv")
 ssa_benefit = read.csv("../Data/OASDI - Table 6.B3 - All Benefit.csv")
 
+
 age <- c(62, 63, 64, 65, 66, 67, 68, 69, 70)
 
 # SSA - Average montly benefit from 2012
@@ -55,7 +56,10 @@ ssa_benefit <- data.frame(age, mth_amt)
 # 401k - Base mount accumulated from contribution
 #   https://blog.personalcapital.com/financial-planning-2/average-401k-balance-age/
 tot_low <- c(690500, 708000, 725500, 743000,	760500, 778000, 795500, 813000, 830500)
-k_Balance <- data.frame(age, tot_low)
+# 401k - Balance with 7% compound interest
+#   http://www.investor.gov/tools/calculators/compound-interest-calculator
+tot_high <- c(3613402, 3883840, 4173209, 4482834,  4814132, 5168621, 5547925, 5953779, 6388044)
+k_Balance <- data.frame(age, tot_low, tot_high)
 ```
 
 
