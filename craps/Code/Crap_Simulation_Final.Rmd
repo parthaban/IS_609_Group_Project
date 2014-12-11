@@ -232,7 +232,7 @@ Since on the tie or Boxcars nobody wins, let us ignore that situation. If we red
 ### Monte Carlo Simulation in R
       
       
-```{r simu, echo=TRUE}
+```{r simu, echo=FALSE}
 # Number of simulation
 N = 10000
 cat("Number of simulations = ", N, sep="")
@@ -319,11 +319,19 @@ No one wins:  `r nrow(data[data$flag==0,])` or `r round(nrow(data[data$flag==0,]
           
 Mean: `r mean(data$flag)`       
 SD: `r sd(data$flag)`     
+      
+      
+*The results obtained by simulation are very close to probabilities calculated Mathematically above*.  
+      
 
+```{r hist, echo=FALSE}
+hist(data$flag, breaks=c(-1,-0.3,0.3,1), col=c("red","yellow","green"), main="", xlab="Don't Pass Win (Red) / All Lose (Yellow) / Pass Win (Green)", ylab="Frequency")
+```
+      
 \pagebreak
 
 If we repeat this simulation of the pass bets $1000$ times:
-```{r, echo = FALSE}
+```{r pass, echo = FALSE}
 PassBets <- replicate(1000, {
 
 N = 1000
@@ -380,7 +388,7 @@ We see that the probabilities are generally below 50%
 \pagebreak
 
 And if we do the same for the Don't Pass bets:
-```{r, echo = FALSE}
+```{r dpass, echo = FALSE}
 DontPassBets <- replicate(1000, {
   N = 1000
   
@@ -450,3 +458,159 @@ From the decision tree, we can see that the Probability of Shooter's wining = 49
 ## Conclusion
 
 From both mathematical analysis and simulation game, it is clear that the Craps game is close to a fair gamble where the chance for wining is very close to 50&#37;.   However, as it is less than 50&#37; and as the House will play on indefinitely, it will always come out ahead due to this slight imbalance. 
+        
+\pagebreak
+
+## Simulating a real life situation
+        
+        
+**[This is in addition to what this Project asked]**
+        
+Let us simulate a board (game) with the following assumptions:
+
+- Simulation period: 90 days
+- Each day      
+      + 15 gamblers play on each day and no one will quit in betweeen a game      
+      + Each will play for $50 and bet anything between $0 (not playing that round) and $5 in each shoot/round      
+      + A player will quit the table only if (s)he loses $50 with which (s)he entered in Casino or game ends      
+      + Each player's choice on Pass bet or Don't Pass bet will be assigned randomly (though in reality each player plays with some strategy)      
+      + The game will end when less than 10% or only 1 gambler (whichever is greater) is at table     
+      + The game will also end in 3 hours even if all players are playing     
+      + Assume each shoot/dice throw takes 10 seconds and there is 2 minutes gap between 2 games      
+        
+        
+```{r gsim, echo=FALSE}
+CrapsGame <- function(dfStr, N, H, Flg=TRUE) {
+
+  # Initialization
+  Nb <- max(1,round(N*.1,0))      # Minimum number of payers required to continue teh game
+  secRemaining <- H * 60 * 60     # Game time in seconds
+  gamegap <- 2 * 60               # 2 mins gap
+  dicegap <- 10                   # 10 sec gap
+  p <- 0                          # Bet choice
+  b <- 0                          # Bet amount
+
+  plr <- dfStr
+  repeat {
+    if (secRemaining <= 0 || nrow(plr[plr$IniDolr+plr$WinDolr>0,]) <= Nb) {
+      break
+    }
+  
+    for (i in 1:N) {
+      # Player are betting either Pass or Don't Pass, 1 => Pass, 0 => Don't Pass
+      p[i] <- sample(0:1,1)
+      
+      # Player's betting amount (0 => Skip the game)
+      b[i] <- sample(0:5,1)
+      
+      # If balance amount is less than generated number, bet amount = balance amount
+      if (plr$IniDolr[i]+plr$WinDolr[i] < b[i]) {
+        if (plr$IniDolr[i]+plr$WinDolr[i] > 0) {
+          b[i] <- plr$IniDolr[i]+plr$WinDolr[i]
+        } else {
+          b[i] <- 0
+        }
+      }
+    }
+  
+    # First roll
+    shooter <- sample(1:6,1) + sample(1:6,1)
+    
+    if (shooter == 12){                                       # All lose
+      for (i in 1:N) {
+        plr$WinDolr[plr$Player==i] <- plr$WinDolr[plr$Player==i] - b[i]
+        plr$WinDolr[plr$Player==0] <- plr$WinDolr[plr$Player==0] + b[i]
+      }
+    } else if ((shooter == 7)||(shooter == 11)){              # Pass bet wins, Don't Pass bet loses
+      for (i in 1:N) {
+        if (p[i] == 1) {
+          plr$WinDolr[plr$Player==i] <- plr$WinDolr[plr$Player==i] + b[i]
+          plr$WinDolr[plr$Player==0] <- plr$WinDolr[plr$Player==0] - b[i]
+        } else {
+          plr$WinDolr[plr$Player==i] <- plr$WinDolr[plr$Player==i] - b[i]
+          plr$WinDolr[plr$Player==0] <- plr$WinDolr[plr$Player==0] + b[i]
+        }
+      }
+    } else if ((shooter == 2)||(shooter == 3)){              # Pass bet loses, Don't Pass bet wins
+      for (i in 1:N) {
+        if (p[i] == 1) {
+          plr$WinDolr[plr$Player==i] <- plr$WinDolr[plr$Player==i] - b[i]
+          plr$WinDolr[plr$Player==0] <- plr$WinDolr[plr$Player==0] + b[i]
+        } else {
+          plr$WinDolr[plr$Player==i] <- plr$WinDolr[plr$Player==i] + b[i]
+          plr$WinDolr[plr$Player==0] <- plr$WinDolr[plr$Player==0] - b[i]
+        }
+      }
+    } else{
+      point <- shooter
+      secRemaining <- secRemaining - dicegap
+      repeat{
+        lx <- sample(1:6,1)
+        ly <- sample(1:6,1)
+        if (lx + ly == 7){                      # Pass bet loses, Don't Pass bet wins
+          for (i in 1:N) {
+            if (p[i] == 1) {
+              plr$WinDolr[plr$Player==i] <- plr$WinDolr[plr$Player==i] - b[i]
+              plr$WinDolr[plr$Player==0] <- plr$WinDolr[plr$Player==0] + b[i]
+            } else {
+              plr$WinDolr[plr$Player==i] <- plr$WinDolr[plr$Player==i] + b[i]
+              plr$WinDolr[plr$Player==0] <- plr$WinDolr[plr$Player==0] - b[i]
+            }
+          }
+          break
+        }
+        else if (lx + ly == point){              # Pass bet wins, Don't Pass bet loses
+          for (i in 1:N) {
+            if (p[i] == 1) {
+              plr$WinDolr[plr$Player==i] <- plr$WinDolr[plr$Player==i] + b[i]
+              plr$WinDolr[plr$Player==0] <- plr$WinDolr[plr$Player==0] - b[i]
+            } else {
+              plr$WinDolr[plr$Player==i] <- plr$WinDolr[plr$Player==i] - b[i]
+              plr$WinDolr[plr$Player==0] <- plr$WinDolr[plr$Player==0] + b[i]
+            }
+          }
+          break
+        }
+      }
+    }
+    secRemaining <- secRemaining - gamegap
+  }
+  plr$BalDolr <- plr$IniDolr + plr$WinDolr
+  return(plr[,,drop=Flg])
+}
+
+# Initialization
+N <- 15                         # Total number of players
+H <- 3                          # H hours game time
+D <- 90                         # For 90 days
+plr <- {}
+sim <- {}
+
+# Create Player table, Player 0 represents the Casino starts with Initial Balance $0
+plyr <- data.frame(Player=c(0), IniDolr=c(0), WinDolr=c(0))
+for (i in 1:N) {
+  plyr <- rbind(plyr,data.frame(Player=c(i), IniDolr=c(50), WinDolr=c(0)))
+}
+
+# Simulation for D days
+for (i in 1:D){
+    sim <- rbind(sim, CrapsGame(plyr, N, H, F))
+}
+```
+        
+Below are the results of 1 day game, where
+
+- Player: Player Number, Player 0 is Casino
+- IniDolr: Initial Amount at the begining of the day
+- WinDolr: Total Win Amount (negative means lose)
+- BalDolr: Balance Amount at the end of the game
+        
+```{r rdata, echo=FALSE}
+head(sim,N)
+```
+        
+        
+Total Wining Amount for all players including Casino = SUM(WinDolr) = $ `r sum(sim$WinDolr)`, implies that this is a zero sum game.
+        
+        
+Total Amount made by Casino in `r D` days = $ `r format(sum(sim[sim$Player==0,4]), digits=10, nsmall=0, big.mark=",")`, implies longer the game, more profitable for Casino.
