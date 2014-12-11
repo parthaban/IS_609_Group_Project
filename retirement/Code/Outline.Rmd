@@ -94,7 +94,7 @@ Assumptions for modeling problem:
 
 
 Models:
-A. Modeling with Decision Theory
+A. Optimization of Discrete Models with Simplex Method
 ```{r}
 # Calculating SSA Total Benefit with Average Death at 85.45
 ssa_benefit$tot_amt <- (85.45-ssa_benefit$age) * 12 * ssa_benefit$mth_amt
@@ -120,7 +120,7 @@ mth_amt <- tot_amt / (85.45 * 12)
 combin_401contrib <- data.frame(age, mth_amt, tot_amt)
 ```
 
-B. Optimization of Discrete Models with Simplex Method
+B. Modeling with Decision Theory
 ```{r}
 
 
