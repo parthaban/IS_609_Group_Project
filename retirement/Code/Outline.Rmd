@@ -106,7 +106,7 @@ Assumptions for modeling problem:
 - Average life expectency till 85.45 for those reaching 65 in 2014.
 - Using average SSA benefit from 2012
 - Start contributing to 401k from age 22 with an inital contribution of $8,000 and $17,500 every year after.
-- Use base amount of 401k contributions.
+- Use 7% compound growth for 401k contributions.
 
 
 Models:
