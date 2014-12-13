@@ -383,7 +383,8 @@ mean(data)
 qplot(PassBets, geom = "freqpoly", xlab = "Probability of pass-bet win", ylab = "frequency", main = "Frequency of pass-bet probabilities") + geom_vline(xintercept = 0.5, color = "red", linetype = "longdash")
 ```
 
-We see that the probabilities are generally below 50%
+We see that the probabilities are generally below 50% and do hover around the algebraic solution of 49.29%
+
 
 \pagebreak
 
@@ -441,7 +442,7 @@ DontPassBets <- replicate(1000, {
 qplot(DontPassBets, geom = "freqpoly", xlab = "Probability of don't pass-bet win", ylab = "frequency", main = "Frequency of don't pass-bet probabilities") + geom_vline(xintercept = 0.5, color = "red", linetype = "longdash")
 ```
       
-
+We see that this too hovers around the algebraic solution of 47.93%
 
 Note that no matter the choice, the odds are usually worse than a coin-flip
 
@@ -457,7 +458,10 @@ From the decision tree, we can see that the Probability of Shooter's wining = 49
 
 ## Conclusion
 
-From both mathematical analysis and simulation game, it is clear that the Craps game is close to a fair gamble where the chance for wining is very close to 50&#37;.   However, as it is less than 50&#37; and as the House will play on indefinitely, it will always come out ahead due to this slight imbalance. 
+From both mathematical analysis and simulation game, it is clear that the Craps game is close to a fair gamble where the chance for wining is very close to 50&#37;.   However, as it is less than 50&#37; and as the House will play on indefinitely, the House will always come out ahead due to this slight imbalance. 
+
+However, if you are to play the game, the best choice to make would be do a pass-bet.  This has a better chance of winning than a don't-pass bet.  (49.29% versus 47.93%)
+
         
 \pagebreak
 
