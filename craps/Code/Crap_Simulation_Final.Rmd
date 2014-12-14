@@ -32,7 +32,7 @@ options(warn=-1)
 # Library and Directory Config
 
 # Add all required packages here. 
-required.packages <- c("xtable","ggplot2")
+required.packages <- c("xtable","ggplot2","png","grid")
 
 # Check to see if packages in required.packages are installed
 have.pkgs <- required.packages %in% installed.packages()
@@ -93,7 +93,7 @@ Craps involves the rolling of two dice. The assumption is that the dice are fair
       
 The possible totals obtained from rolling two dice are as below:
 
-&nbsp;|&nbsp;|1 |	2 |	3 |	4 |	5 |	6
+&nbsp;|&nbsp;|1 |  2 |	3 |	4 |	5 |	6
 --|--|----|---|---|---|---|---
 1	|&nbsp;|2 |	3 |	4 |	5 |	6 |	7 
 2	|&nbsp;|3 |	4 |	5 |	6 |	7 |	8 
@@ -156,12 +156,7 @@ Initial Roll ($n$) | $P(p = n)$ | $P(win \mid p = n)$ | $P(win) = P(p = n) P(win
 ```{r calc1, echo=FALSE}
 win <- 3/36*3/9*2 + 4/36*4/10*2 + 5/36*5/11*2 + 6/36 + 2/36
 ```
-Hence, $P(win) = \sum_{n=2}^{12} P(p = n) P(win \mid p = n)$ = `r win` 
-
-
-Hence the probability of the Shooter wins = `r round(win*100,2)`&#37;
-      
-Which implies the probability that the Shooter loses = `r round((1 - win)*100,2)`&#37;
+Hence, $P(win) = \sum_{n=2}^{12} P(p = n) P(win \mid p = n)$ = `r win`. Meaning the probability of the Shooter wins = `r round(win*100,2)`&#37; which implies the probability that the Shooter loses = `r round((1 - win)*100,2)`&#37;
       
 **Note**: *We will see the same results in our decision tree model while solve this Craps game*.
 
@@ -169,9 +164,7 @@ Which implies the probability that the Shooter loses = `r round((1 - win)*100,2)
       
 Here we have 2 types of bets - Pass and Don't Pass. In the Pass bet, the gambler wins only when Shooter wins and in Don't Pass bet the gambler wins only when Shooters loses except the Boxcars (Roll a 12 on the first roll).      
         
-Hence, for the **_Pass bet gambler_**, the winning probability is:  `r round(win*100,2)`&#37;     
-And for the Casino (or house), the winning probability is:  `r round((1 - win)*100,2)`&#37;      
-Thus, _the house has an advantage of about 1.4% on any Pass bet_.
+Hence, for the **_Pass bet gambler_**, the winning probability is:  `r round(win*100,2)`&#37;. And for the **Casino** (or house), the winning probability is:  `r round((1 - win)*100,2)`&#37;. Thus, _the house has an advantage of about 1.4% on any Pass bet_.
         
 ```{r calc2, echo=FALSE}
 df <- data.frame(bins=c(runif(1,0,1)))
@@ -185,7 +178,10 @@ for (i in 1:(round(1/36,3)*1000)) {
   df <- rbind(df, data.frame(bins=c(runif(1,-1,0))))
 }
 # cat("Graphical representation of Shooter's Lose/Win:\n")
-hist(df$bins, breaks=1.5, col=c("red","green"), main="", xlab="Casino (Red) / Pass bet Gambler (Green)", ylab="Frequency x 1000")
+
+# Hiding the graph below to fit the report within page limit
+
+#hist(df$bins, breaks=1.5, col=c("red","green"), main="", xlab="Casino (Red) / Pass bet Gambler (Green)", ylab="Frequency x 1000")
 ```
         
 Now the probability of Boxcars = $\frac{1}{36}$ = `r round(100/36,2)`&#37;      
@@ -224,8 +220,6 @@ The casino has only a slight edge in craps. But, in the long run, the game is a 
 
 Since on the tie or Boxcars nobody wins, let us ignore that situation. If we reduce this to a win or lose situation, the probability that a Don't Pass Bet wins is $\frac{0.479293}{(0.479293 + 0.492929)}$ = 0.492987 and the probability that a Don't Pass Bet loses is 1 - 0.492987 = 0.507013. Thus the casino maintains a 1.4&#37; advantage over the player even in Don't Pass bet.
       
-      
-\pagebreak
 
 ## Simulation to verify Mathematical Approach
       
@@ -300,16 +294,13 @@ data <- data[!is.na(data$flag),]
     + -1 = Don't Pass win
         
         
-Top 25 simulated Craps data:
+Top 10 simulated Craps data:
 
 ```{r simuresult1, echo=FALSE}
-print(head(data, n=25), row.names=FALSE)
-````
-\pagebreak
-Bottom 10 simulated Craps data:
+print(head(data, n=10), row.names=FALSE)
 
-```{r simuresult2, echo=FALSE}
-print(tail(data, n=10), row.names=FALSE)
+# Bottom 10 simulated Craps data:
+#print(tail(data, n=10), row.names=FALSE)
 ````
 
         
@@ -324,13 +315,13 @@ SD: `r sd(data$flag)`
 *The results obtained by simulation are very close to probabilities calculated Mathematically above*.  
       
 
-```{r hist, echo=FALSE}
+```{r hist, echo=FALSE, fig.width=8, fig.height=4}
 hist(data$flag, breaks=c(-1,-0.3,0.3,1), col=c("red","yellow","green"), main="", xlab="Don't Pass Win (Red) / All Lose (Yellow) / Pass Win (Green)", ylab="Frequency")
 ```
       
 \pagebreak
 
-If we repeat this simulation of the pass bets $1000$ times:
+If we repeat this simulation for the Pass bet $1000$ times and for the Don't Pass bet for $1000$ times:
 ```{r pass, echo = FALSE}
 PassBets <- replicate(1000, {
 
@@ -380,15 +371,8 @@ for (i in 1:N){
 }
 mean(data)
 })
-qplot(PassBets, geom = "freqpoly", xlab = "Probability of pass-bet win", ylab = "frequency", main = "Frequency of pass-bet probabilities") + geom_vline(xintercept = 0.5, color = "red", linetype = "longdash")
 ```
 
-We see that the probabilities are generally below 50% and do hover around the algebraic solution of 49.29%
-
-
-\pagebreak
-
-And if we do the same for the Don't Pass bets:
 ```{r dpass, echo = FALSE}
 DontPassBets <- replicate(1000, {
   N = 1000
@@ -439,10 +423,15 @@ DontPassBets <- replicate(1000, {
   #Probability of winning when you are a no-pass bet
   mean(data)
 })
-qplot(DontPassBets, geom = "freqpoly", xlab = "Probability of don't pass-bet win", ylab = "frequency", main = "Frequency of don't pass-bet probabilities") + geom_vline(xintercept = 0.5, color = "red", linetype = "longdash")
+
+````
+
+```{r dspplt, echo=FALSE, fig.width=8, fig.height=5}
+par(mfrow=c(2,1))
+qplot(PassBets, geom = "freqpoly", xlab = "Probability of Pass bet win", ylab = "frequency", main = "Frequency of Pass bet probabilities", binwidth=diff(range(DontPassBets))/30) + geom_vline(xintercept = 0.5, color = "red", linetype = "longdash")
+qplot(DontPassBets, geom = "freqpoly", xlab = "Probability of Don't Pass bet win", ylab = "frequency", main = "Frequency of Don't Pass bet probabilities", binwidth=diff(range(DontPassBets))/30) + geom_vline(xintercept = 0.5, color = "red", linetype = "longdash")
 ```
       
-We see that this too hovers around the algebraic solution of 47.93%
 
 Note that no matter the choice, the odds are usually worse than a coin-flip
 
@@ -450,23 +439,22 @@ Note that no matter the choice, the odds are usually worse than a coin-flip
 
 ### Decision tree with expected value of winning
       
-![Overview key](Tree.png)      
-
+```{r tree, fig.width=5, fig.height=7, echo=FALSE}
+#![Overview key](Tree.png)      
+img <- readPNG("./Tree.png")
+grid.raster(img)
+```
+        
 From the decision tree, we can see that the Probability of Shooter's wining = 49.29&#37;
         
-**Note**: *This is the same result we received while solveing this game mathematically*.
-
+          
 ## Conclusion
 
-From both mathematical analysis and simulation game, it is clear that the Craps game is close to a fair gamble where the chance for wining is very close to 50&#37;.   However, as it is less than 50&#37; and as the House will play on indefinitely, the House will always come out ahead due to this slight imbalance. 
-
-However, if you are to play the game, the best choice to make would be do a pass-bet.  This has a better chance of winning than a don't-pass bet.  (49.29% versus 47.93%)
-
-        
+From the above mathematical analysis, simulation and decision tree, it is clear that the Craps game is close to a fair gamble where the chance for wining is close to 50&#37;.   However, as it is favorable to House and as the House will play longer, House will always come out ahead due to this slight imbalance. 
+          
 \pagebreak
 
 ## Simulating a real life situation
-        
         
 **[This is in addition to what this Project asked]**
         
@@ -474,7 +462,7 @@ Let us simulate a board (game) with the following assumptions:
 
 - Simulation period: 90 days
 - Each day      
-      + 15 gamblers play on each day and no one will quit in betweeen a game      
+      + 10 gamblers play on each day and no one will quit in betweeen a game      
       + Each will play for $50 and bet anything between $0 (not playing that round) and $5 in each shoot/round      
       + A player will quit the table only if (s)he loses $50 with which (s)he entered in Casino or game ends      
       + Each player's choice on Pass bet or Don't Pass bet will be assigned randomly (though in reality each player plays with some strategy)      
@@ -482,7 +470,8 @@ Let us simulate a board (game) with the following assumptions:
       + The game will also end in 3 hours even if all players are playing     
       + Assume each shoot/dice throw takes 10 seconds and there is 2 minutes gap between 2 games      
         
-        
+The objective of this simulation is to see how Cashino makes money (started with $0 balance) and whether it grows over time. We are no more focusing on percentages of Pass bet and Don't Pass bet in this real life simulation.     
+          
 ```{r gsim, echo=FALSE}
 CrapsGame <- function(dfStr, N, H, Flg=TRUE) {
 
@@ -584,7 +573,7 @@ CrapsGame <- function(dfStr, N, H, Flg=TRUE) {
 }
 
 # Initialization
-N <- 15                         # Total number of players
+N <- 10                         # Total number of players
 H <- 3                          # H hours game time
 D <- 90                         # For 90 days
 plr <- {}
@@ -617,4 +606,4 @@ head(sim,N)
 Total Wining Amount for all players including Casino = SUM(WinDolr) = $ `r sum(sim$WinDolr)`, implies that this is a zero sum game.
         
         
-Total Amount made by Casino in `r D` days = $ `r format(sum(sim[sim$Player==0,4]), digits=10, nsmall=0, big.mark=",")`, implies longer the game, more profitable for Casino.
+While the amount earned by Casino after Day-1 is $ `r format(sim[sim$Player==0,4][1], digits=10, nsmall=0, big.mark=",")`, total Amount made by Casino in `r D` days = $ `r format(sum(sim[sim$Player==0,4]), digits=10, nsmall=0, big.mark=",")`, implies longer the game, more profitable for Casino.
