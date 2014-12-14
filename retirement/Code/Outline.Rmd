@@ -1,14 +1,35 @@
 ---
-title: "Camparison of 401K VS Social Security for Retirement"
+title: 'ISDA 609 - Mathematical Modeling Techniques for Data Analytics'
 author: "Partha Banerjee, Rohan Fray, Vincent Ying"
 date: "November 19, 2014"
-output: html_document
+output:
+  pdf_document:
+    highlight: tango
+    toc: yes
+    toc_depth: 4
+  html_document:
+    theme: united
+    toc: yes
+geometry: margin=0.6in
+fontsize: 11pt
 ---
 
+\pagebreak
 
-  
+```{r clear, include=FALSE, echo=FALSE}
+# Added this "clear all" section to make sure we can run use "Chunks/Run All"" without conflict.
+# Still does not catch package info, but that will be seen when knit.
+
+# Start with a Clean memory
+rm(list=ls())
+
+# Supress warnings particularly during loading of libraries
+options(warn=-1)
+```
+
+```{r config, echo=FALSE, results='hide'}
 # Library and Directory Config
-```{r echo=FALSE}
+
 # Add all required packages here. 
 required.packages <- c("plyr", 
                        "ggplot2",
@@ -22,7 +43,7 @@ if(length(required.packages) > sum(have.pkgs)){
 }
 
 for(pkg in required.packages){
-  library(pkg, character.only = TRUE)
+  library(pkg, character.only = TRUE, quietly=TRUE, warn.conflicts=FALSE)
 }
 
 # Make sure we're in the right working directory:  "Code"
@@ -36,7 +57,17 @@ if(!("Code" %in% list.files("..")))
 }
 ```
 
-# Load Data
+
+## Problem Definition: Final Project #2     
+        
+### Project 9.4.2 (page 376): Camparison of 401K VS Social Security for Retirement
+        
+Retirement and Social Security. Should US citizens build their own retirement through 401Ks or use the current Social Security program?  Build models to be able to compare these systems and provide decisions that can help someone to plan a better retirement.     
+        
+**Problem Statement:**        
+This purpose of this project is to determine the best way to maximize savings for retirement. 401K investment returns and Social Security payout from contributions will be analyzed and compared.      
+                
+### Load Data
 
 ```{r data}
 # SSA Dataset (Taken from supplement13.xlsx)
@@ -62,7 +93,7 @@ tot_high <- c(3613402, 3883840, 4173209, 4482834,  4814132, 5168621, 5547925, 59
 k_Balance <- data.frame(age, tot_low, tot_high)
 ```
 
-# ASSUMING LIFE EXPECTENCY OF 85.45 FOR MODELING:
+### Assuming life expectancy of 85.45 for modeling:
 
 ```{r}
 # Calculate SSA Total Benefit with Average Death at 85.45
@@ -74,9 +105,10 @@ k_Balance$mth_low <- k_Balance$tot_low / (85.45-k_Balance$age) / 12
 k_Balance$mth_high <- k_Balance$tot_high / (85.45-k_Balance$age) / 12
 ```
 
-# Comparison of SSA and 401k return.
+### Comparison of SSA and 401k return.
 
 Assumptions for comparison:
+
 - Start work at age 22.
 - Average life expectency till 85.45 for those reaching 65 in 2014.
 - Use average SSA benefit from 2012
@@ -95,13 +127,16 @@ ratio_401k <- k_Balance$tot_high / k_Balance$tot_low
 plot(k_Balance$age, ratio_401k)
 ```
 
-# Modeling:
+### Modeling:       
+        
 Problem:
+
 - When to start retirement?
 - When to start withdrawing from SSA?
 
 
 Assumptions for modeling problem:
+
 - Start work at age 22.
 - Average life expectency till 85.45 for those reaching 65 in 2014.
 - Using average SSA benefit from 2012
@@ -109,8 +144,8 @@ Assumptions for modeling problem:
 - Use 7% compound growth for 401k contributions.
 
 
-Models:
-A. Optimization of Discrete Models with Simplex Method
+Models: Optimization of Discrete Models with Simplex Method      
+
 ```{r}
 # Combined benefit when withdrawing 401k at 62 and delaying SSA
 tot_amt <- ssa_benefit$tot_amt + k_Balance[k_Balance$age==62,]$tot_high
@@ -130,10 +165,4 @@ combin_401contrib <- data.frame(age, mth_amt, tot_amt)
 # Combined benefits from SSA and 401k
 plot(combin_401contrib$age, combin$mth_amt)
 plot(combin_401contrib$age, combin$tot_amt)
-```
-
-B. Modeling with Decision Theory
-```{r}
-
-
 ```
