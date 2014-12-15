@@ -32,8 +32,7 @@ options(warn=-1)
 
 # Add all required packages here. 
 required.packages <- c("plyr", 
-                       "ggplot2",
-                       "gdata")
+                       "ggplot2")
 
 # Check to see if packages in required.packages are installed
 have.pkgs <- required.packages %in% installed.packages()
@@ -67,22 +66,119 @@ Retirement and Social Security. Should US citizens build their own retirement th
 **Problem Statement:**        
 This purpose of this project is to determine the best way to maximize savings for retirement. 401K investment returns and Social Security payout from contributions will be analyzed and compared.      
                 
-### Load Data
+## Solution        
+        
+### Notes and References:     
 
-```{r data}
-# SSA Dataset (Taken from supplement13.xlsx)
-ssa_taxrate = read.csv("../Data/OASDI - Table 2.A3 - Annual max taxable earnings and contribution rates.csv")
-ssa_taxamt = read.csv("../Data/OASDI - Table 2.A4 - Maximum annual contribution.csv")
-ssa_benefit = read.csv("../Data/OASDI - Table 6.B3 - All Benefit.csv")
+Average retirement statistics:  
+
+- Average age of retirement is 62 years
+- Average length of retirement is 18 years
+- http://www.statisticbrain.com/retirement-statistics/
 
 
+SSA Calculator Page:  
+
+- Avg men live till 84.3 years
+- Avg women live till 86.6 years
+- http://www.ssa.gov/retire2/otherthings.htm
+
+Life Expectency Tables
+
+- 1991 birth year (22 year old in 2013) is 75.8 years
+- http://www.census.gov/compendia/statab/cats/births_deaths_marriages_divorces/life_expectancy.html
+
+Median Income Tables
+
+- Median income of 22 year old in 2013 is $11,288
+- https://www.census.gov/hhes/www/income/data/historical/people/
+  
+Compound Interest Calculator
+
+- http://www.investor.gov/tools/calculators/compound-interest-calculator
+
+SSA Contribution:
+
+- Tax rate for contribution given by supplement13, Table 2.A3
+- Maximum tax amoung given by supplement13, Table 2.A4
+
+SSA Benefit:
+
+- Benefit calculation involves three steps:
+
+  1. Worker's previous earnings are recalulated in current terms with inflation adjustment.
+  2. Earnings for the highest 35 years are averaged and divided by 12 to obtain AIME (Averaged Indexed Monthly Earnings).
+	3. SSA benefit formula applied to AIME to obtain PIA (Primary Insurance Amount).
+
+- PIA formula with FRA at 2015:
+
+	1. 90 percent of the first $826 of his/her average indexed monthly earnings, plus       
+	2. 32 percent of his/her average indexed monthly earnings over $826 and through $4,980, plus      
+	3. 15 percent of his/her average indexed monthly earnings over $4,980   
+	- http://www.ssa.gov/oact/cola/piaformula.html
+
+- Benefit payouts are adjusted for inflation according to CPI.
+- Spousal benefit can also be claimed.
+- Taxation of SSA benefits can occur when withdrawing a large amount from IRA due to RMD at 70.5 ("tax torpedo").
+
+- Effect of Early or Delayed Retirement on Retirement Benefits (yearly),  
+
+	Year of Birth	|FRA	| Credit	|62	|63	|64	|65	|66	|67	|70
+  --------------|-----|---------|---|---|---|---|---|---|--
+	1960 and later| 67 	|8        |	70|75 |	80| 86$\frac{2}{3}$ |93$\frac{1}{3}$ |100 |124
+
+	- http://www.ssa.gov/OACT/ProgData/ar_drc.html
+
+- Average monthly benefit in 2012,  
+
+	Total Number	| ERA (Early retirement)	| FRA (Full Retirement Age)
+  ----|-------|---
+	$1,147.78	|$1,147.78	|	$1,577.00
+
+	- supplement13, Table 6.B3
+
+- Extrapolate average monthly benefit from 2012,
+
+	Age	|62	|63	|64	|65	|66	|67	|70
+  ----|---|---|---|---|---|---|---
+	Benefit	|1103.90|	1182.75|1261.60|1366.62|1471.81|1577.00|	1955.48
+
+401K Contribution:
+
+- Tax-deferring contributions until retirement.
+- Amount contributed to 401k by retirement without accounting for compound growth
+
+  Age	|62	|63	|64	|65	|66	|67	|70
+  ----|---|---|---|---|---|---|---
+  401K|690500 |708000 |725500 |743000 |760500 |778000 |795500
+
+  + http://blog.personalcapital.com/financial-planning-2/average-401k-balance-age
+
+- Growth of 401k determined by investment choices.
+	- Average of 7% can be expected.
+	  + http://www.thesimpledollar.com/where-does-7-come-from-when-it-comes-to-long-term-stock-returns/
+
+
+401K Benefit:
+
+- Withdrawl without penalties start at 59.5 years.
+- RMD (required minimum distribution) starts at either 70.5 or on retirement.   
+  + http://www.irs.gov/Retirement-Plans/Plan-Participant/Employee/Retirement-Topics-Required-Minimum-Distributions-%28RMDs%29
+- During retirement age, the intended purpose of a 401k was to purchase life annuities.
+  However, average payouts for life annuities have been decreasing.
+- Savings could be siphoned off by commissions and management fees.
+          
+### Prepare Data
+
+```{r data, echo=FALSE}
+# Consider the age bracket 62 yrs to 70 yrs
 age <- c(62, 63, 64, 65, 66, 67, 68, 69, 70)
 
 # SSA - Average montly benefit from 2012
 #   supplement13, Table 6.B3 
 #   and http://www.ssa.gov/OACT/ProgData/ar_drc.html
-mth_amt <- c(1103.9, 1182.75,	1261.6,	1366.62, 1471.81,	1577, 1703.16, 1829.32, 1955.48)
-ssa_benefit <- data.frame(age, mth_amt)
+mth_amt_rt <- c(1103.9, 1182.75,  1261.6,	1366.62, 1471.81,	1577, 1703.16, 1829.32, 1955.48)
+ssa_benefit <- data.frame(age, mth_amt_rt)
 
 # 401k - Base mount accumulated from contribution
 #   https://blog.personalcapital.com/financial-planning-2/average-401k-balance-age/
@@ -91,18 +187,22 @@ tot_low <- c(690500, 708000, 725500, 743000,	760500, 778000, 795500, 813000, 830
 #   http://www.investor.gov/tools/calculators/compound-interest-calculator
 tot_high <- c(3613402, 3883840, 4173209, 4482834,  4814132, 5168621, 5547925, 5953779, 6388044)
 k_Balance <- data.frame(age, tot_low, tot_high)
-```
 
 ### Assuming life expectancy of 85.45 for modeling:
 
-```{r}
 # Calculate SSA Total Benefit with Average Death at 85.45
-ssa_benefit$tot_amt <- (85.45-ssa_benefit$age) * 12 * ssa_benefit$mth_amt
+ssa_benefit$tot_amt <- (85.45-ssa_benefit$age) * 12 * ssa_benefit$mth_amt_rt
 
 # Calculate 401k Monthly Benefit with Base Balance
 k_Balance$mth_low <- k_Balance$tot_low / (85.45-k_Balance$age) / 12
 # Calculate 401k Monthly Benefit with 7% Increase
 k_Balance$mth_high <- k_Balance$tot_high / (85.45-k_Balance$age) / 12
+
+cdf <- merge(ssa_benefit,k_Balance,by="age")
+names(cdf) <- c("Age","SSA_Monthly_Rate","Total_SSA_Benefit","Total_401k_Low","Total_$01k_High","Monthly_$01k_low","Monthly_401k_High")
+
+cat("Prepared Data:\n")
+cdf
 ```
 
 ### Comparison of SSA and 401k return.
@@ -116,15 +216,11 @@ Assumptions for comparison:
 - Use 7% compound growth for 401k contributions.
 
 
-```{r}
-# SSA Ratios of Benefit To Contribution According to Age
-#ratio_ssa <- ssa_benefit$tot_amt / "TOTAL CONTRIBUTION"
-
+```{r echo=FALSE}
 # 401k Ratios of Benefit To Contribution According to Age
 ratio_401k <- k_Balance$tot_high / k_Balance$tot_low
 
-#plot(ssa_benefit$age, ratio_ssa)
-plot(k_Balance$age, ratio_401k)
+plot(k_Balance$age, ratio_401k, main="401k Ratios of Benefit To Contribution According to Age", xlab="Age", ylab="Benefit ratio")
 ```
 
 ### Modeling:       
@@ -146,23 +242,31 @@ Assumptions for modeling problem:
 
 Models: Optimization of Discrete Models with Simplex Method      
 
-```{r}
+```{r echo=FALSE}
 # Combined benefit when withdrawing 401k at 62 and delaying SSA
 tot_amt <- ssa_benefit$tot_amt + k_Balance[k_Balance$age==62,]$tot_high
 mth_amt <- tot_amt / (85.45 * 12)
 combin <- data.frame(age, mth_amt, tot_amt)
 
 # Combined benefits from SSA and 401k
-plot(combin$age, combin$mth_amt)
-plot(combin$age, combin$tot_amt)
+plot(combin$age, combin$mth_amt,  main="Combined benefit when withdrawing 401k at 62 and delaying SSA", xlab="Age", ylab="Monthly Amount")
 
+```
 
+```{r echo=FALSE}
 # Combined benefit when contributing to 401k until start of SSA
 tot_amt <- ssa_benefit$tot_amt + k_Balance$tot_high
 mth_amt <- tot_amt / (85.45 * 12)
 combin_401contrib <- data.frame(age, mth_amt, tot_amt)
 
 # Combined benefits from SSA and 401k
-plot(combin_401contrib$age, combin$mth_amt)
-plot(combin_401contrib$age, combin$tot_amt)
+plot(combin_401contrib$age, combin$mth_amt,  main="Combined benefit when contributing to 401k until start of SSA", xlab="Age", ylab="Monthly Amount")
 ```
+          
+## Conclusion 
+        
+- The best way to maximize savings for retirement is to maximize contributions into a 401K account as early as possible on the planning horizon and to contribute as long as possible.
+- Make use of the 401K account earlier, at the start or before retirement.
+- Delay the start of SSA benefit payouts as long as possible (up to age 70) to maximize the payout amount throughout retirement.
+
+The contribution and returns on Social Security, 401K, and any other retirement account needs to be considered in combination to better plan for retirement.
